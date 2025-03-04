@@ -8,14 +8,12 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.boot.test.context.SpringBootTest;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
 import java.util.Objects;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -30,8 +28,8 @@ public class TaskServiceTest {
 
     @Test
     void shouldCreateTaskSuccessfully() {
-        Task task = Task.builder().id(null).title("Título").description("Descripción").status(TaskStatus.TODO.name()).build();
-        Task savedTask = Task.builder().id("1").title("Título").description("Descripción").status(TaskStatus.TODO.name()).build();
+        Task task = Task.builder().id(null).title("Title").description("Description").status(TaskStatus.TODO.name()).build();
+        Task savedTask = Task.builder().id("1").title("Title").description("Description").status(TaskStatus.TODO.name()).build();
 
         when(taskRepository.save(any(Task.class))).thenReturn(Mono.just(savedTask));
 
@@ -40,7 +38,7 @@ public class TaskServiceTest {
         StepVerifier.create(createdTask)
                 .assertNext(t -> {
                     assertNotNull(t.getId());
-                    assertEquals("Título", t.getTitle());
+                    assertEquals("Title", t.getTitle());
                     assertEquals(TaskStatus.TODO.name(), t.getStatus());
                 })
                 .verifyComplete();
@@ -48,8 +46,8 @@ public class TaskServiceTest {
 
     @Test
     void shouldUpdateTaskSuccessfully() {
-        Task existingTask = Task.builder().id("1").title("Tarea vieja").description("Descripción vieja").status(TaskStatus.TODO.name()).build();
-        Task updatedTask = Task.builder().id("1").title("Tarea nueva").description("Descripción nueva").status(TaskStatus.COMPLETED.name()).build();
+        Task existingTask = Task.builder().id("1").title("Old task").description("Old description").status(TaskStatus.TODO.name()).build();
+        Task updatedTask = Task.builder().id("1").title("New task").description("New description").status(TaskStatus.COMPLETED.name()).build();
 
         when(taskRepository.findById("1")).thenReturn(Mono.just(existingTask));
         when(taskRepository.save(any(Task.class))).thenReturn(Mono.just(updatedTask));
@@ -58,13 +56,27 @@ public class TaskServiceTest {
 
         StepVerifier.create(result)
                 .expectNextMatches(task ->
-                        task.getTitle().equals("Tarea nueva") &&
-                                task.getDescription().equals("Descripción nueva") &&
+                        task.getTitle().equals("New task") &&
+                                task.getDescription().equals("New description") &&
                                 Objects.equals(task.getStatus(), TaskStatus.COMPLETED.name())
                 )
                 .verifyComplete();
 
         verify(taskRepository).findById("1");
         verify(taskRepository).save(any(Task.class));
+    }
+
+    @Test
+    void shouldMarkTaskAsDeleted() {
+        Task task = Task.builder().id("1").title("Title").description("Description").status(TaskStatus.TODO.name()).build();
+
+        when(taskRepository.findById("1")).thenReturn(Mono.just(task));
+        when(taskRepository.save(any(Task.class))).thenAnswer(invocation -> Mono.just(invocation.getArgument(0)));
+
+        Mono<Task> result = taskService.deleteTask("1");
+
+        StepVerifier.create(result)
+                .assertNext(updatedTask -> assertTrue(updatedTask.isDeleted()))
+                .verifyComplete();
     }
 }

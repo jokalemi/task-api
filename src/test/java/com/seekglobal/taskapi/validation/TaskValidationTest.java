@@ -25,7 +25,7 @@ public class TaskValidationTest {
 
     @Test
     void shouldDetectBlankTitle() {
-        Task task = Task.builder().id(null).title("").description("Descripción válida").status(TaskStatus.TODO.name()).build();
+        Task task = Task.builder().id(null).title("").description("Valid description").status(TaskStatus.TODO.name()).build();
         Set<ConstraintViolation<Task>> violations = validator.validate(task);
 
         assertFalse(violations.isEmpty());
@@ -34,7 +34,7 @@ public class TaskValidationTest {
 
     @Test
     void shouldDetectNullStatus() {
-        Task task = Task.builder().id(null).title("Título válido").description("Descripción válida").status(null).build();
+        Task task = Task.builder().id(null).title("Valid title").description("Valid description").status(null).build();
         Set<ConstraintViolation<Task>> violations = validator.validate(task);
 
         assertFalse(violations.isEmpty());
@@ -43,7 +43,7 @@ public class TaskValidationTest {
 
     @Test
     void shouldDetectBlankDescription() {
-        Task task = Task.builder().id(null).title("Tarea válida").description("").status(TaskStatus.TODO.name()).build();
+        Task task = Task.builder().id(null).title("Valid title").description("").status(TaskStatus.TODO.name()).build();
         Set<ConstraintViolation<Task>> violations = validator.validate(task);
 
         assertFalse(violations.isEmpty());
@@ -52,7 +52,7 @@ public class TaskValidationTest {
 
     @Test
     void shouldPassValidationWithValidData() {
-        Task task = Task.builder().id(null).title("Tarea válida").description("Descripción válida").status(TaskStatus.TODO.name()).build();
+        Task task = Task.builder().id(null).title("Valid title").description("Valid description").status(TaskStatus.TODO.name()).build();
         Set<ConstraintViolation<Task>> violations = validator.validate(task);
 
         assertEquals(0, violations.size());
