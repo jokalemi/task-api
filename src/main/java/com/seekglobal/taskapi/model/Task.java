@@ -3,15 +3,13 @@ package com.seekglobal.taskapi.model;
 import com.seekglobal.taskapi.validation.ValidEnum;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
+@Getter
+@Setter
+@Builder
 @Document(collection = "tasks")
 public class Task {
     @Id
@@ -27,5 +25,8 @@ public class Task {
 
     @ValidEnum(enumClass = TaskStatus.class)
     private String status;
+
+    @Builder.Default
+    private boolean isDeleted = false;
 }
 

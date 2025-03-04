@@ -30,8 +30,8 @@ public class TaskServiceTest {
 
     @Test
     void shouldCreateTaskSuccessfully() {
-        Task task = new Task(null, "Título", "Descripción", TaskStatus.TODO.name());
-        Task savedTask = new Task("1", "Título", "Descripción", TaskStatus.TODO.name());
+        Task task = Task.builder().id(null).title("Título").description("Descripción").status(TaskStatus.TODO.name()).build();
+        Task savedTask = Task.builder().id("1").title("Título").description("Descripción").status(TaskStatus.TODO.name()).build();
 
         when(taskRepository.save(any(Task.class))).thenReturn(Mono.just(savedTask));
 
@@ -48,8 +48,8 @@ public class TaskServiceTest {
 
     @Test
     void shouldUpdateTaskSuccessfully() {
-        Task existingTask = new Task("1", "Tarea vieja", "Descripción vieja", TaskStatus.TODO.name());
-        Task updatedTask = new Task("1", "Tarea nueva", "Descripción nueva", TaskStatus.COMPLETED.name());
+        Task existingTask = Task.builder().id("1").title("Tarea vieja").description("Descripción vieja").status(TaskStatus.TODO.name()).build();
+        Task updatedTask = Task.builder().id("1").title("Tarea nueva").description("Descripción nueva").status(TaskStatus.COMPLETED.name()).build();
 
         when(taskRepository.findById("1")).thenReturn(Mono.just(existingTask));
         when(taskRepository.save(any(Task.class))).thenReturn(Mono.just(updatedTask));
