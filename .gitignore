@@ -1,0 +1,48 @@
+# Directorios de IntelliJ IDEA
+.idea/
+*.iml
+*.iws
+
+# Archivos de compilación de Maven y Gradle
+target/
+build/
+
+# Dependencias de Maven y Gradle
+.mvn/
+.gradle/
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+# Archivos de configuración de Gradle
+gradle-app.setting
+gradle-wrapper.jar
+
+# Archivos de logs
+logs/
+*.log
+
+# Configuración del entorno
+.env
+*.properties
+*.yml
+*.yaml
+
+# Archivos generados por el IDE
+*.class
+*.jar
+*.war
+*.ear
+
+# Archivos de prueba de cobertura
+.coverage
+.jacoco/
+*.exec
+*.ec
+
+# Docker
+docker-compose.override.yml
+
+# Archivos del sistema operativo
+.DS_Store
+Thumbs.db
+src/main/resources/application.yml
