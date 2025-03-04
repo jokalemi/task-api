@@ -16,4 +16,14 @@ public class TaskService {
     public Mono<Task> createTask(@Valid Task task) {
         return taskRepository.save(task);
     }
+
+    public Mono<Task> updateTask(String id, Task updatedTask) {
+        return taskRepository.findById(id)
+                .flatMap(existingTask -> {
+                    existingTask.setTitle(updatedTask.getTitle());
+                    existingTask.setDescription(updatedTask.getDescription());
+                    existingTask.setStatus(updatedTask.getStatus());
+                    return taskRepository.save(existingTask);
+                });
+    }
 }
