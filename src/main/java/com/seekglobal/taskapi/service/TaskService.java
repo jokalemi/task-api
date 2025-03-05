@@ -26,6 +26,7 @@ public class TaskService {
 
     public Mono<Task> updateTask(String id, Task updatedTask) {
         return taskRepository.findById(id)
+                .switchIfEmpty(Mono.error(new TaskNotFoundException("Task not found with id: " + id)))
                 .flatMap(existingTask -> {
                     existingTask.setTitle(updatedTask.getTitle());
                     existingTask.setDescription(updatedTask.getDescription());
@@ -36,6 +37,7 @@ public class TaskService {
 
     public Mono<Task> deleteTask(String id) {
         return taskRepository.findById(id)
+                .switchIfEmpty(Mono.error(new TaskNotFoundException("Task not found with id: " + id)))
                 .flatMap(task -> {
                     task.setDeleted(true);
                     return taskRepository.save(task);

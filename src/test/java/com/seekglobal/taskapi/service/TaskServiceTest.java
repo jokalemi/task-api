@@ -25,8 +25,7 @@ import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class TaskServiceTest {
@@ -80,6 +79,17 @@ public class TaskServiceTest {
     }
 
     @Test
+    void shouldReturnErrorWhenUpdatingNonExistentTask() {
+        when(taskRepository.findById("999")).thenReturn(Mono.empty());
+
+        StepVerifier.create(taskService.updateTask("999", Task.builder().build()))
+                .expectError(TaskNotFoundException.class)
+                .verify();
+
+        verify(taskRepository, never()).save(any(Task.class));
+    }
+
+    @Test
     void shouldMarkTaskAsDeleted() {
         Task task = Task.builder().id("1").title("Title").description("Description").status(TaskStatus.TODO.name()).build();
 
@@ -91,6 +101,17 @@ public class TaskServiceTest {
         StepVerifier.create(result)
                 .assertNext(updatedTask -> assertTrue(updatedTask.isDeleted()))
                 .verifyComplete();
+    }
+
+    @Test
+    void shouldReturnErrorWhenDeletingNonExistentTask() {
+        when(taskRepository.findById("999")).thenReturn(Mono.empty());
+
+        StepVerifier.create(taskService.deleteTask("999"))
+                .expectError(TaskNotFoundException.class)
+                .verify();
+
+        verify(taskRepository, never()).save(any(Task.class));
     }
 
     @Test

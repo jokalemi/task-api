@@ -3,7 +3,9 @@ package com.seekglobal.taskapi.model;
 import com.seekglobal.taskapi.validation.ValidEnum;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
-import lombok.*;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 

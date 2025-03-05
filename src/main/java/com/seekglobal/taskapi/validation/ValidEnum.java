@@ -11,8 +11,11 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ValidEnum {
     Class<? extends Enum<?>> enumClass();
+
     String message() default "{task.status.invalid}";
+
     Class<?>[] groups() default {};
+
     Class<? extends Payload>[] payload() default {};
 }
 
