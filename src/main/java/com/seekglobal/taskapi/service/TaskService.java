@@ -1,7 +1,7 @@
 package com.seekglobal.taskapi.service;
 
 import com.seekglobal.taskapi.builder.TaskQueryBuilder;
-import com.seekglobal.taskapi.exception.TaskNotFoundException;
+import com.seekglobal.taskapi.exception.NotFoundException;
 import com.seekglobal.taskapi.model.Task;
 import com.seekglobal.taskapi.repository.TaskRepository;
 import jakarta.validation.Valid;
@@ -26,7 +26,7 @@ public class TaskService {
 
     public Mono<Task> updateTask(String id, Task updatedTask) {
         return taskRepository.findById(id)
-                .switchIfEmpty(Mono.error(new TaskNotFoundException("Task not found with id: " + id)))
+                .switchIfEmpty(Mono.error(new NotFoundException("Task not found with id: " + id)))
                 .flatMap(existingTask -> {
                     existingTask.setTitle(updatedTask.getTitle());
                     existingTask.setDescription(updatedTask.getDescription());
@@ -37,7 +37,7 @@ public class TaskService {
 
     public Mono<Task> deleteTask(String id) {
         return taskRepository.findById(id)
-                .switchIfEmpty(Mono.error(new TaskNotFoundException("Task not found with id: " + id)))
+                .switchIfEmpty(Mono.error(new NotFoundException("Task not found with id: " + id)))
                 .flatMap(task -> {
                     task.setDeleted(true);
                     return taskRepository.save(task);
@@ -47,7 +47,7 @@ public class TaskService {
     public Mono<Task> getTaskById(String id) {
         return taskRepository.findById(id)
                 .filter(task -> !task.isDeleted())
-                .switchIfEmpty(Mono.error(new TaskNotFoundException("Task not found with id: " + id)));
+                .switchIfEmpty(Mono.error(new NotFoundException("Task not found with id: " + id)));
     }
 
     public Flux<Task> searchTasks(String searchTerm, String status, int page, int size) {

@@ -1,7 +1,7 @@
 package com.seekglobal.taskapi.service;
 
 import com.seekglobal.taskapi.builder.TaskQueryBuilder;
-import com.seekglobal.taskapi.exception.TaskNotFoundException;
+import com.seekglobal.taskapi.exception.NotFoundException;
 import com.seekglobal.taskapi.model.Task;
 import com.seekglobal.taskapi.model.TaskStatus;
 import com.seekglobal.taskapi.repository.TaskRepository;
@@ -83,7 +83,7 @@ public class TaskServiceTest {
         when(taskRepository.findById("999")).thenReturn(Mono.empty());
 
         StepVerifier.create(taskService.updateTask("999", Task.builder().build()))
-                .expectError(TaskNotFoundException.class)
+                .expectError(NotFoundException.class)
                 .verify();
 
         verify(taskRepository, never()).save(any(Task.class));
@@ -108,7 +108,7 @@ public class TaskServiceTest {
         when(taskRepository.findById("999")).thenReturn(Mono.empty());
 
         StepVerifier.create(taskService.deleteTask("999"))
-                .expectError(TaskNotFoundException.class)
+                .expectError(NotFoundException.class)
                 .verify();
 
         verify(taskRepository, never()).save(any(Task.class));
@@ -134,7 +134,7 @@ public class TaskServiceTest {
         Mono<Task> result = taskService.getTaskById("1");
 
         StepVerifier.create(result)
-                .expectError(TaskNotFoundException.class)
+                .expectError(NotFoundException.class)
                 .verify();
     }
 
